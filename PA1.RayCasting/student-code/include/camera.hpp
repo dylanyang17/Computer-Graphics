@@ -54,7 +54,7 @@ public:
     Ray generateRay(const Vector2f &point) override {
         // 
         Vector3f vec = Vector3f((point[0]-this->width/2.0)/fx, (point[1]-this->height/2.0)/fy, 1).normalized();
-        Matrix3f R = Matrix3f(this->horizontal, -this->up, this->direction);
+        Matrix3f R = Matrix3f(this->horizontal, this->up, this->direction);
         vec = R * vec;
         return Ray(this->center, vec.normalized());
     }
