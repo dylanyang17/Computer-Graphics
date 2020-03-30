@@ -19,4 +19,8 @@ float calcT(const Ray &r, const Vector3f &p) {
     return tmpv2[0] / tmpv1[0];
 }
 
+float calcReLU(const float &f) {
+    return ((f > 0) ? f : 0); 
+}
+
 #endif

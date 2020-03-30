@@ -6,6 +6,7 @@
 
 #include "ray.hpp"
 #include "hit.hpp"
+#include "utils.hpp"
 #include <iostream>
 
 // TODO: Implement Shade function that computes Phong introduced in class.
@@ -26,9 +27,13 @@ public:
 
     Vector3f Shade(const Ray &ray, const Hit &hit,
                    const Vector3f &dirToLight, const Vector3f &lightColor) {
-        Vector3f shaded = Vector3f::ZERO;
-        // 
-        return shaded;
+        // 令 T 为交点。 注意 dirToLight 为交点到光源方向的向量
+        Vector3f pointT = ray.pointAtParameter(hit.getT());
+        Vector3f vecN = hit.getNormal().normalized(), vecLx = dirToLight.normalized();
+        Vector3f vecV = -ray.getDirection().normalized();
+        Vector3f vecRx = 2 * Vector3f::dot(vecLx, vecN) * vecN - vecLx;
+        return (this->diffuseColor * calcReLU(Vector3f::dot(vecLx, vecN)) +
+               this->specularColor * calcReLU(Vector3f::dot(vecV, vecRx))) * lightColor;
     }
 
 protected:
