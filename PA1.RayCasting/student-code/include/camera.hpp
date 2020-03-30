@@ -44,11 +44,24 @@ public:
     PerspectiveCamera(const Vector3f &center, const Vector3f &direction,
             const Vector3f &up, int imgW, int imgH, float angle) : Camera(center, direction, up, imgW, imgH) {
         // angle is in radian.
+        // 注意透视相机模型中，有 tan(angle/2) = (imgW/2/fx) / 1
+        // 另外这里 cx 和 cy 均为 0
+        fx = (float)imgW / 2 / tan(angle/2);
+        fy = (float)imgH / 2 / tan(angle/2);
+        this->angle = angle;
     }
 
     Ray generateRay(const Vector2f &point) override {
         // 
+        Vector3f vec = Vector3f(point[0]/fx, point[1]/fy, 1).normalized();
+        Matrix3f R = Matrix3f(this->horizontal, -this->up, this->direction);
+        vec = R * vec;
+        return Ray(this->center, vec.normalized());
     }
+
+private:
+    // fx 和 fy 为图像空间到真实世界空间的尺度参数
+    float fx, fy, angle;
 };
 
 #endif //CAMERA_H
