@@ -33,7 +33,7 @@ public:
         Vector3f vecV = -ray.getDirection().normalized();
         Vector3f vecRx = 2 * Vector3f::dot(vecLx, vecN) * vecN - vecLx;
         return (this->diffuseColor * calcReLU(Vector3f::dot(vecLx, vecN)) +
-               this->specularColor * calcReLU(Vector3f::dot(vecV, vecRx))) * lightColor;
+               this->specularColor * pow(calcReLU(Vector3f::dot(vecV, vecRx)), this->shininess)) * lightColor;
     }
 
 protected:
