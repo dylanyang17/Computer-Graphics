@@ -3,6 +3,7 @@
 
 #include "object3d.hpp"
 #include "utils.hpp"
+#include "plane.hpp"
 #include <vecmath.h>
 #include <cmath>
 #include <iostream>
