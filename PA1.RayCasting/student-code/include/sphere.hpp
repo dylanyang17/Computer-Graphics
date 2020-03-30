@@ -2,9 +2,9 @@
 #define SPHERE_H
 
 #include "object3d.hpp"
+#include "utils.hpp"
 #include <vecmath.h>
 #include <cmath>
-#include <utils.hpp>
 
 // TODO: Implement functions and add more fields as necessary
 
