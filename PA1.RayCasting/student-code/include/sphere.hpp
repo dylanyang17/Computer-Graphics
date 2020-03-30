@@ -47,6 +47,8 @@ public:
             assert(sgn(lenAD) > 0);
             Vector3f pointD = pointA + lenAD * vecAB;
             float t = calcT(r, pointD);
+            if (t < tmin || t > h.getT())
+                return false;
             h.set(t, this->material, (pointD - pointO).normalized());
             return true;
         }
