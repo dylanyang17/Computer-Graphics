@@ -33,7 +33,37 @@ int main(int argc, char *argv[]) {
     // through that pixel and finding its intersection with
     // the scene.  Write the color at the intersection to that
     // pixel in your output image.
-    cout << "Hello! Computer Graphics!" << endl;
+    SceneParser parser(inputFile.c_str());
+    Camera *camera = parser.getCamera();
+    Image image(camera->getWidth(), camera->getHeight());
+    for (int x = 0; x < camera->getWidth(); ++x) {
+        for (int y = 0; y < camera->getHeight(); ++y) {
+            // 计算当前像素 (x, y) 处相机出射光线 camRay
+            Ray camRay = camera->generateRay(Vector2f(x, y));
+            Group *baseGroup = parser.getGroup();
+            Hit hit;
+            // 找到 camRay 同场景的最近交点，若无交点则 isIntersect 为 false
+            bool isIntersect = baseGroup -> intersect(camRay, hit, 0);
+            if (isIntersect) {
+                // 找到交点后，累加来自所有光源的光强影响
+                Vector3f finalColor = Vector3f::ZERO;
+                for (int li = 0; li < parser.getNumLights(); ++li) {
+                    Light *light = parser.getLight(li);
+                    Vector3f L, lightColor;
+                    // 获得光照强度
+                    light->getIllumination(camRay.pointAtParameter(hit.getT()), L, lightColor);
+                    // 计算局部光强
+                    finalColor += hit.getMaterial()->Shade(camRay, hit, L, lightColor);
+                }
+                image.SetPixel(x, y, finalColor);
+            } else {
+                // 不存在交点则返回背景色
+                image.SetPixel(x, y, parser.getBackgroundColor());
+            }
+        }
+    }
+    image.SaveBMP(outputFile.c_str());
+    // cout << "Hello! Computer Graphics!" << endl;
     return 0;
 }
 
