@@ -10,4 +10,6 @@ float calcT(const Ray &r, const Vector3f &p);
 
 float calcReLU(const float &f);
 
+void printVector3f(const Vector3f &f);
+
 #endif
