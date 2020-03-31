@@ -5,6 +5,8 @@ IF(NOT CMAKE_BUILD_TYPE)
     SET(CMAKE_BUILD_TYPE Release)
 ENDIF()
 
+# add_compile_options(-g)
+# add_compile_options(-O0)
 ADD_SUBDIRECTORY(deps/vecmath)
 
 SET(PA1_SOURCES

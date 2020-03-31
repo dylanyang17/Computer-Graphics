@@ -1,0 +1,6 @@
+/home/yyr/Work/Computer-Graphics/PA1.RayCasting/student-code/build/CMakeFiles/rebuild_cache.dir
+/home/yyr/Work/Computer-Graphics/PA1.RayCasting/student-code/build/CMakeFiles/PA1.dir
+/home/yyr/Work/Computer-Graphics/PA1.RayCasting/student-code/build/CMakeFiles/edit_cache.dir
+/home/yyr/Work/Computer-Graphics/PA1.RayCasting/student-code/build/deps/vecmath/CMakeFiles/rebuild_cache.dir
+/home/yyr/Work/Computer-Graphics/PA1.RayCasting/student-code/build/deps/vecmath/CMakeFiles/vecmath.dir
+/home/yyr/Work/Computer-Graphics/PA1.RayCasting/student-code/build/deps/vecmath/CMakeFiles/edit_cache.dir

@@ -63,7 +63,6 @@ int main(int argc, char *argv[]) {
         }
     }
     image.SaveBMP(outputFile.c_str());
-    // cout << "Hello! Computer Graphics!" << endl;
     return 0;
 }
 

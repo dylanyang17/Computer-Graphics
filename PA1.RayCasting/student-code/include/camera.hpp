@@ -56,6 +56,8 @@ public:
         Vector3f vec = Vector3f((point[0]-this->width/2.0)/fx, (point[1]-this->height/2.0)/fy, 1).normalized();
         Matrix3f R = Matrix3f(this->horizontal, this->up, this->direction);
         vec = R * vec;
+        //if (point[0] >= 98 && point[0] <= 102)
+        //    printf("(%.1f,%.1f): (%.3f,%.3f,%.3f) \n",point[0],point[1],vec[0],vec[1],vec[2]);
         return Ray(this->center, vec.normalized());
     }
 
