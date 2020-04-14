@@ -1,0 +1,6 @@
+/home/yyr/Work/Computer-Graphics/PA2.OpenGLMesh/code/build/CMakeFiles/rebuild_cache.dir
+/home/yyr/Work/Computer-Graphics/PA2.OpenGLMesh/code/build/CMakeFiles/PA2.dir
+/home/yyr/Work/Computer-Graphics/PA2.OpenGLMesh/code/build/CMakeFiles/edit_cache.dir
+/home/yyr/Work/Computer-Graphics/PA2.OpenGLMesh/code/build/deps/vecmath/CMakeFiles/rebuild_cache.dir
+/home/yyr/Work/Computer-Graphics/PA2.OpenGLMesh/code/build/deps/vecmath/CMakeFiles/vecmath.dir
+/home/yyr/Work/Computer-Graphics/PA2.OpenGLMesh/code/build/deps/vecmath/CMakeFiles/edit_cache.dir
