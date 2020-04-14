@@ -31,9 +31,9 @@ public:
         // TODO (PA2, done): Call drawGL for each individual triangle.
         for (int triId = 0; triId < (int) t.size(); ++triId) {
             TriangleIndex& triIndex = t[triId];
-            Triangle triangle(v[triIndex[0]],
-                            v[triIndex[1]], v[triIndex[2]], material);
+            Triangle triangle(v[triIndex[0]], v[triIndex[1]], v[triIndex[2]], material);
             triangle.normal = n[triId];
+            for (int i = 0; i < 3; ++i) triangle.vertices[i] = v[triIndex[i]]; 
             triangle.drawGL();
         }
     }

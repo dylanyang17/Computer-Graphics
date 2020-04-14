@@ -92,7 +92,11 @@ void drawScene() {
     sceneParser->getCamera()->setupGLMatrix();
 
     // TODO (PA2): Turn On all lights.
+    for (int i = 0; i < sceneParser->getNumLights(); ++i) {
+        sceneParser->getLight(i)->turnOn(i);
+    }
     // TODO (PA2): Draw elements.
+    sceneParser->getGroup()->drawGL();
 
     // Dump the image to the screen.
     glutSwapBuffers();

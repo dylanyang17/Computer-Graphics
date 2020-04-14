@@ -50,7 +50,10 @@ SET(PA2_INCLUDES
         )
 
 SET(CMAKE_CXX_STANDARD 11)
-SET(CMAKE_CXX_FLAGS "-g -O3 -Wno-deprecated-declarations")
+add_compile_options(-g)
+add_compile_options(-O0)
+# SET(CMAKE_CXX_FLAGS "-g -O0")
+# SET(CMAKE_CXX_FLAGS "-g -O3 -Wno-deprecated-declarations")
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${PA2_SOURCES})
