@@ -26,7 +26,8 @@ SET(PA3_SOURCES
         src/main.cpp
         src/mesh.cpp
         src/scene_parser.cpp
-        src/camera_controller.cpp)
+        src/camera_controller.cpp
+	src/utils.cpp)
 
 SET(PA3_INCLUDES
         include/camera.hpp
@@ -45,10 +46,13 @@ SET(PA3_INCLUDES
         include/triangle.hpp
         include/camera_controller.hpp
         include/curve.hpp
-        include/revsurface.hpp)
+        include/revsurface.hpp
+	include/utils.hpp)
 
 SET(CMAKE_CXX_STANDARD 11)
-SET(CMAKE_CXX_FLAGS "-g -O3 -Wno-deprecated-declarations")
+add_compile_options(-g)
+add_compile_options(-O0)
+# SET(CMAKE_CXX_FLAGS "-g -O3 -Wno-deprecated-declarations")
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${PA3_SOURCES} ${PA3_INCLUDES})
