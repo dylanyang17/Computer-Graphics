@@ -16,7 +16,7 @@ public:
 
     }
 
-    Plane(const Vector3f &normal, float d, Material *m) : Object3D(m) {
+    Plane(const Vector3f &norm, float d, Material *m) : Object3D(m) {
         this->norm = norm.normalized();
         this->d = d;
         int dim = utils::find_absmax_dim(norm);  // 这一维一定不为 0
