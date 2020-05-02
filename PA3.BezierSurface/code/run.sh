@@ -16,4 +16,4 @@ cd ..
 # Run all testcases. 
 # You can comment some lines to disable the run of specific examples.
 mkdir -p output
-bin/PA3 testcases/scene09_norm.txt
+bin/PA3 testcases/scene10_wineglass.txt

@@ -455,7 +455,8 @@ Curve *SceneParser::parseBsplineCurve() {
     while (true) {
         getToken(token);
         if (!strcmp(token, "[")) {
-            controls.push_back(readVector3f());
+            Vector3f tmp = readVector3f();
+            controls.push_back(tmp);
             getToken(token);
             assert (!strcmp(token, "]"));
         } else if (!strcmp(token, "}")) {
