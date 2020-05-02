@@ -22,6 +22,7 @@ struct CurvePoint {
 class Curve : public Object3D {
 protected:
     std::vector<Vector3f> controls;
+    int n, k;  // 点数为 n + 1，度数为 k
 public:
     explicit Curve(std::vector<Vector3f> points) : controls(std::move(points)) {}
 
@@ -64,15 +65,66 @@ public:
             printf("Number of control points of BezierCurve must be 3n+1!\n");
             exit(0);
         }
+        // new 一个 [x][y] 的二维数组
+        int x = points.size() + 1, y = points.size() + 1;
+        _B = new double[x * y];
+        B = new double*[x];
+        for (int i = 0; i < x; ++i) {
+            B[i] = _B + i*y;
+        }
+
+        n = points.size() - 1, k = n;
+    }
+
+    ~BezierCurve() {
+        delete[] B;
+        delete[] _B;
+    }
+
+    // 给定 t，计算 B_{i,j}(t)，其中 i 为 0~n, j 为 0~n，且 i<=j
+    // i 为控制结点的标号，j 为度数
+    void calcBasis(double t) {
+        for (int j = 0; j <= n; ++j) {
+            for (int i = 0; i <= j; ++i) {
+                if (i == 0) {
+                    B[i][j] = pow(1-t, j);
+                } else if (i == j) {
+                    B[i][j] = pow(t, i);
+                } else {
+                    B[i][j] = (1-t)*B[i][j-1] + t*B[i-1][j-1];
+                }
+            }
+        }
+    }
+
+    // 给定 t，返回对应的 CurvePoint
+    CurvePoint getCurvePoint(double t) {
+        calcBasis(t);
+        CurvePoint ret;
+        ret.V = Vector3f(0, 0, 0), ret.T = Vector3f(0, 0, 0);
+        for (int i = 0; i <= n; ++i) {
+            ret.V += B[i][n] * controls[i];
+            ret.T += n * controls[i] * (((i>0)?B[i-1][n-1]:0) - ((i<n)?B[i][n-1]:0));
+        }
+        ret.T.normalize();
+        return ret;
     }
 
     void discretize(int resolution, std::vector<CurvePoint>& data) override {
         data.clear();
         // TODO (PA3): fill in data vector
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < resolution; ++j) {
+                double t = (i+(double)j/resolution) / n;
+                data.push_back(getCurvePoint(t));
+            }
+        }
+        data.push_back(getCurvePoint(1));
     }
 
 protected:
-
+    double **B;  // B[i][j] 对应第 i 个控制结点在度数为 k 时的系数 (参数为某个 t)
+    double *_B;  // 用于辅助开辟二维数组
 };
 
 class BsplineCurve : public Curve {
