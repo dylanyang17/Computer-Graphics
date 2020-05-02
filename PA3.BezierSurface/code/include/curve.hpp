@@ -112,7 +112,7 @@ public:
 
     void discretize(int resolution, std::vector<CurvePoint>& data) override {
         data.clear();
-        // TODO (PA3): fill in data vector
+        // TODO (PA3, done): fill in data vector
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < resolution; ++j) {
                 double t = (i+(double)j/resolution) / n;
@@ -144,7 +144,7 @@ public:
             B[i] = _B + i*y;
         }
         // 定义节点序列
-        T = new double(n + k + 2);
+        T = new double[n + k + 2];
         for (int i = 0; i <= n + k + 1; ++i) {
             T[i] = (double)i / (n + k + 1);
         }
@@ -185,14 +185,15 @@ public:
 
     void discretize(int resolution, std::vector<CurvePoint>& data) override {
         data.clear();
-        // TODO (PA3): fill in data vector
-        for (int i = 0; i < n + k + 1; ++i) {
+        // TODO (PA3, done): fill in data vector
+        // DEBUG: 注意 B 样条的有效参数区间为 [T[k], T[n+1]]
+        for (int i = k; i < n + 1; ++i) {
             for (int j = 0; j < resolution; ++j) {
-                double t = (i+(double)j/resolution) / (n + k + 1);
+                double t = T[i] + (double)j/resolution/(n+k+1);
                 data.push_back(getCurvePoint(t));
             }
         }
-        data.push_back(getCurvePoint(1));
+        // data.push_back(getCurvePoint(1));
     }
 
 protected:
