@@ -66,10 +66,35 @@ public:
     int cx, cy;
     int radius;
     Vector3f color;
+
+    void circlepoints(Image &img, int x, int y) {
+        // 对称地画 8 个点，注意 x, y 是以 (0, 0) 作为圆心时的点坐标
+        for (int i = -1; i <= 1; i += 2) {
+            for (int j = -1; j <= 1; j += 2) {
+                img.SetPixel(cx + x * i, cy + y * j, color);
+                img.SetPixel(cx + y * i, cy + x * j, color);
+            }
+        }
+    }
+
     void draw(Image &img) override {
         // TODO: Implement Algorithm to draw a Circle
         printf("Draw a circle with center (%d, %d) and radius %d using color (%f, %f, %f)\n", cx, cy, radius,
                color.x(), color.y(), color.z());
+        int x = 0, y = radius;
+        // d 乘上 4 变为整数
+        int d = 5 - 4 * radius;
+        circlepoints(img, x, y);
+        while (x <= y) {
+            if (d < 0) {
+                d += 4 * (2*x+3);
+            } else {
+                d += 4 * (2*(x-y)+5);
+                y--;
+            }
+            x++;
+            circlepoints(img, x, y);
+        }
     }
 };
 
