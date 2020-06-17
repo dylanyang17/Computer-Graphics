@@ -29,6 +29,10 @@ public:
         Vector3f pointA = r.getOrigin(), vecAP = this->p - pointA, vecAB = r.getDirection().normalized();
         Vector3f vecAC = this->normal * Vector3f::dot(vecAP, this->normal);
         float cs = Vector3f::dot(vecAC, vecAB) / vecAC.length() / vecAB.length();
+        if (sgn(vecAC.length()) == 0) {
+            // 射线起点在面上
+            return false;
+        }
         if (sgn(cs) == 0) {
             // AB 所在直线与平面平行
             return false;

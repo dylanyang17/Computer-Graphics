@@ -8,14 +8,6 @@ PerspectiveCamera {
     height 200
 }
 
-Lights {
-    numLights 1
-    PointLight {
-        position 0.0 5 5
-        color 0.9 0.9 0.9 
-    }
-}
-
 Background {
     color 0 0 0 
 }
@@ -23,24 +15,24 @@ Background {
 Materials {
     numMaterials 4
     Material { 
-        type DIFF
-        emission 1 1 1
-        color 0 0 0
+        refRatio 0
+        emission 0 0 0
+        color 0.3 0.5 0.3
     }
-    Material { 
-        type DIFF
+    Material {
+        refRatio 0
         emission 0 0 0
         color 0.8 0.4 0.7
     }
     Material { 
-        type DIFF
+        refRatio 0
         emission 0 0 0
-        color 0.1 0.55 0.25
+        color 0.4 0.5 0.7
     }
     Material { 
-        type DIFF
-        emission 0 0 0
-        color 0.8 0.6 0.9
+        refRatio 0
+        emission 5 8 5
+        color 0 0 0
     }
 }
 
@@ -70,9 +62,8 @@ Group {
         radius 0.75 
     }
     MaterialIndex 3
-    Plane {
-	normal 0 1 0
-        offset -2
+    Sphere {
+	    center 0 100 0
+        radius 30
     }
 }
-

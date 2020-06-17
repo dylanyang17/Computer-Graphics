@@ -31,6 +31,13 @@ public:
         Vector3f vecAC = vecAB * Vector3f::dot(vecAB, vecAO);
         Vector3f vecCO = pointO - (pointA + vecAC);
         float dis = vecCO.length();
+        // 射线起点在圆上或圆内
+        if (sgn(vecAO.length() - this->radius) <= 0)
+            return false;
+        // 射线方向与到圆心的方向相反
+        if (sgn(Vector3f::dot(vecAB, vecAO)) <= 0)
+            return false;
+        // 射线所在直线与圆无交点
         if (sgn(dis - this->radius) > 0)
             return false;
         else if (sgn(dis - this->radius) == 0) {

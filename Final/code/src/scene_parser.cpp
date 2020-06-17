@@ -46,10 +46,6 @@ SceneParser::SceneParser(const char *filename) {
     parseFile();
     fclose(file);
     file = nullptr;
-
-    if (num_lights == 0) {
-        printf("WARNING:    No lights specified\n");
-    }
 }
 
 SceneParser::~SceneParser() {
@@ -368,7 +364,7 @@ Plane *SceneParser::parsePlane() {
     getToken(token);
     assert (!strcmp(token, "}"));
     assert (current_material != nullptr);
-    return new Plane(normal, offset, current_material);
+    return new Plane(normal, offset*normal, current_material);
 }
 
 
