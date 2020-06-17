@@ -46,9 +46,10 @@ public:
         // angle is in radian.
         // 注意透视相机模型中，有 tan(angle/2) = (imgW/2.0/fx) / 1
         // 另外这里 cx 和 cy 分别为 imgW/2.0 和 imgH/2.0
-        fx = imgW / 2.0 / tan(angle/2);
-        fy = imgH / 2.0 / tan(angle/2);
-        this->angle = angle;
+        this->angleW = angle;
+        this->angleH = angle * imgH / imgW;
+        fx = imgW / 2.0 / tan(angleW/2);
+        fy = imgH / 2.0 / tan(angleH/2);
     }
 
     Ray generateRay(const Vector2f &point) override {
@@ -63,7 +64,8 @@ public:
 
 private:
     // fx 和 fy 为图像空间到真实世界空间的尺度参数
-    double fx, fy, angle;
+    // angleW 和 angleH 为宽和高方向的视角
+    double fx, fy, angleW, angleH;
 };
 
 #endif //CAMERA_H

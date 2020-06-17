@@ -4,8 +4,8 @@ PerspectiveCamera {
     direction 0 1 0
     up 0 0 1
     angle 50
-    width 1024
-    height 768
+    width 640
+    height 480
 }
 
 Background {
@@ -35,14 +35,14 @@ Materials {
         color 0 0 0
     }
     Material { 
-        refRatio 0.5
-        emission 0 0 0
-        color 0.75 0 0
-    }
-    Material { 
         refRatio 0.8
         emission 0 0 0
         color 0 0 0.75
+    }
+    Material { 
+        refRatio 0.5
+        emission 0 0 0
+        color 0.75 0 0
     }
 }
 
