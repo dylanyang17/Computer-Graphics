@@ -37,21 +37,38 @@ Vector3f radiance(const Ray &r, int depth, unsigned short *Xi, Group *group) {
         return Vector3f(0, 0, 0);
     Material *m = hit.getMaterial();
     // 令单位入射向量为 in，单位法向为 norm
-    int only = 0;  // 为 0 时表示两个部分都需要计算，为 1 时表示仅计算镜面反射部分，为 2 时表示仅计算漫反射部分
-    if (depth > 2) {
-        only = (erand48(Xi) < m->refRatio) ? 1 : 2;
-    }
+    Vector3f f = m->color;
     Vector3f ret = m->emission;
-    if ((only == 0 || only == 1) && m->refRatio > 1e-5) {
+    Vector3f hitPoint = r.pointAtParameter(hit.getT());
+    Vector3f norm = hit.getNormal();
+    float refRatio = m->refRatio;
+    float p = f.x()>f.y() && f.x()>f.z() ? f.x() : f.y()>f.z() ? f.y() : f.z();
+    if (depth > 5) if (erand48(Xi) < p) f = f/p; else return ret;  // 轮盘赌
+    int only = 0;  // 为 0 时表示两个部分都需要计算，为 1 时表示仅计算镜面反射部分，为 2 时表示仅计算漫反射部分
+    if (depth > 2) only = (erand48(Xi) < refRatio) ? 1 : 2;
+    Vector3f sum = Vector3f::ZERO;  // 存储从该交点出发之后的颜色效果总和
+    if ((only == 0 || only == 1) && refRatio > 1e-5) {
         // 镜面反射部分
         Vector3f in = r.getDirection().normalized();
-        Vector3f norm = hit.getNormal();
         Vector3f newDir = (in + Vector3f::dot(in, norm)*2*norm).normalized();
-
+        Vector3f tmp = radiance(Ray(hitPoint, newDir), depth+1, Xi, group);
+        if (only == 0) tmp = tmp * refRatio;
+        sum = sum + tmp;
     }
-    if (m->refRatio < 1-1e-5) {
+    if ((only == 0 || only == 2) && refRatio < 1-1e-5) {
         // 漫反射部分
+        // u, v, w 为一组正交基，其中 w 即交点处法向 norm
+        // r2s 即单位反射向量在 uv 平面上的投影长度
+        float r1 = 2*M_PI*erand48(Xi), r2=erand48(Xi), r2s=sqrt(r2);
+        Vector3f w = norm, u = Vector3f::cross(fabs(w.x())>0.1 ? Vector3f(0, 1, 0) : Vector3f(1, 0, 0), w).normalized(),
+            v = Vector3f::cross(w, u);
+        Vector3f newDir = (u*cos(r1)*r2s + v*sin(r1)*r2s + w*sqrt(1-r2)).normalized();
+        Vector3f tmp = radiance(Ray(hitPoint, newDir), depth+1, Xi, group);
+        if (only == 0) tmp = tmp * (1-refRatio);
+        sum = sum + tmp;
     }
+    ret = ret + f * sum;
+    return ret;
 }
 
 int main(int argc, char *argv[]) {
