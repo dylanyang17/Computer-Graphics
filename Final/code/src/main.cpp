@@ -20,10 +20,22 @@ inline double clamp(double x) {
     return x < 0 ? 0 : x > 1 ? 1 : x;
 }
 
+inline Vector3f clamp(Vector3f vec) {
+    return Vector3f(clamp(vec.x()), clamp(vec.y()), clamp(vec.z()));
+}
+
 Vector3f gammaCorrection(const Vector3f &color) {
     Vector3f ret;
     for (int i = 0; i < 3; ++i) {
-        ret[i] = pow(clamp(color[i]), 1/2.2);
+        ret[i] = pow(color[i], 1/2.2);
+    }
+    return ret;
+}
+
+Vector3f revGammaCorrection(const Vector3f &color) {
+    Vector3f ret;
+    for (int i = 0; i < 3; ++i) {
+        ret[i] = pow(color[i], 2.2);
     }
     return ret;
 }
@@ -31,7 +43,7 @@ Vector3f gammaCorrection(const Vector3f &color) {
 Vector3f radiance(int ttx, int tty, int tts, const Ray &r, int depth, unsigned short *Xi, Group *group, const Vector3f background) {
     // TODO: 检查反射时是否会与反射处物体相交
     Hit hit;
-    bool isIntersect = group->intersect(r, hit, 1e-4);
+    bool isIntersect = group->intersect(r, hit, 1e-2);
     if (!isIntersect)
         return background;
     Material *m = hit.getMaterial();
@@ -50,7 +62,7 @@ Vector3f radiance(int ttx, int tty, int tts, const Ray &r, int depth, unsigned s
     if ((only == 0 || only == 1) && refRatio > 1e-5) {
         // 镜面反射部分
         Vector3f in = r.getDirection().normalized();
-        Vector3f newDir = (in + Vector3f::dot(in, norm)*2*norm).normalized();
+        Vector3f newDir = (in - Vector3f::dot(in, norm)*2*norm).normalized();
         Vector3f tmp = radiance(ttx, tty, tts, Ray(hitPoint, newDir), depth+1, Xi, group, background);
         if (only == 0) tmp = tmp * refRatio;
         sum = sum + tmp;
@@ -78,8 +90,8 @@ int main(int argc, char *argv[]) {
         std::cout << "Argument " << argNum << " is: " << argv[argNum] << std::endl;
     }
 
-    if (argc != 4) {
-        cout << "Usage: ./bin/Final <input scene file> <output bmp file> <spp>" << endl;
+    if (argc != 3) {
+        cout << "Usage: ./bin/Final <filename> <spp>" << endl;
         return 1;
     }
 
@@ -87,36 +99,63 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Warning: OpenMP not supported.\n");
 #endif
 
-    string inputFile = argv[1];
-    string outputFile = argv[2];  // only bmp is allowed.
-    int spp = atoi(argv[3]) / 4;
+    string filename = argv[1];
+    int spp = atoi(argv[2]) / 4 * 4;
 
-    SceneParser parser(inputFile.c_str());
+    SceneParser parser((filename + ".txt").c_str());
     Camera *camera = parser.getCamera();
     Image image(camera->getWidth(), camera->getHeight());
+    Image *lastImage;
+    int lastSpp = 0;
     Group *group = parser.getGroup();
+
+    FILE *logFile = fopen((filename+".log").c_str(), "r");
+    if (logFile != NULL && ~fscanf(logFile, "%d", &lastSpp)) {
+        printf("检测到log文件，是否继续上次运行？(Y/N)\n");
+        char c;
+        while ((c = getchar()) != EOF && c != 'Y' && c != 'N');
+        if (c=='Y') {
+            lastImage = Image::LoadPPM((filename+".ppm").c_str());
+        } else {
+            lastSpp = 0;
+        }
+        fclose(logFile);
+    } else lastSpp = 0;
+
   #pragma omp parallel for schedule(dynamic)
     for (int x = 0; x < camera->getWidth(); ++x) {
-        fprintf(stderr, "\rRendering (%d spp) %5.2f%%", spp*4, 100.*x/(camera->getWidth()-1));
+        fprintf(stderr, "\rRendering (%d spp) %5.2f%%", spp, 100.*x/(camera->getWidth()-1));
         for (int y = 0; y < camera->getHeight(); ++y) {
-            unsigned short Xi[3] = {0, 0, x * x * x};
+            unsigned short Xi[3] = {time(NULL), clock(), x * x * x};
             tmpColor[x][y] = Vector3f::ZERO;
             Vector3f r = Vector3f::ZERO;
             for (int sx = 0; sx < 2; ++sx) {
                 for (int sy = 0; sy < 2; ++sy) {
-                    for (int s = 0; s < spp; ++s) {
+                    for (int s = 0; s < spp/4; ++s) {
                         double r1 = 2 * erand48(Xi), r2 = 2 * erand48(Xi);
                         double dx = r1 < 1 ? sqrt(r1)-1 : 1-sqrt(2-r1);
                         double dy = r2 < 1 ? sqrt(r2)-1 : 1-sqrt(2-r2);
                         Ray ray = camera->generateRay(Vector2f((sx+0.5+dx)/2 + x, (sy+0.5+dy)/2 + y));
-                        r = r + radiance(x, y, s, ray, 0, Xi, group, parser.getBackgroundColor()) / spp;
+                        r = r + radiance(x, y, s, ray, 0, Xi, group, parser.getBackgroundColor()) / (spp/4);
                     }
-                    tmpColor[x][y] = tmpColor[x][y] + Vector3f(clamp(r.x()), clamp(r.y()), clamp(r.z()))*0.25;
+                    tmpColor[x][y] = tmpColor[x][y] + clamp(r)*0.25;
                 }
             }
-            image.SetPixel(x, y, gammaCorrection(tmpColor[x][y]));
+            tmpColor[x][y] = clamp(tmpColor[x][y]);
         }
     }
-    image.SaveBMP(outputFile.c_str());
+
+    int sumSpp = lastSpp + spp;
+    double p = (double)spp / sumSpp;
+    for (int x = 0; x < camera->getWidth(); ++x) {
+        for (int y = 0; y < camera->getHeight(); ++y) {
+            if (lastSpp != 0) {
+                image.SetPixel(x, y, gammaCorrection(revGammaCorrection(lastImage->GetPixel(x, y)) * (1-p) + tmpColor[x][y] * p));
+            } else image.SetPixel(x, y, gammaCorrection(tmpColor[x][y]));
+        }
+    }
+    logFile = fopen((filename+".log").c_str(), "w");
+    fprintf(logFile, "%d\n", sumSpp);
+    image.SavePPM((filename + ".ppm").c_str());
     return 0;
 }

@@ -16,4 +16,4 @@ cd ..
 # Run all testcases. 
 # You can comment some lines to disable the run of specific examples.
 mkdir -p output
-bin/Final testcases/my_scene2.txt output/my_scene2.bmp $*
+bin/Final testcases/my_scene2 $*
