@@ -42,7 +42,7 @@ class PerspectiveCamera : public Camera {
 
 public:
     PerspectiveCamera(const Vector3f &center, const Vector3f &direction,
-            const Vector3f &up, int imgW, int imgH, float angle) : Camera(center, direction, up, imgW, imgH) {
+            const Vector3f &up, int imgW, int imgH, double angle) : Camera(center, direction, up, imgW, imgH) {
         // angle is in radian.
         // 注意透视相机模型中，有 tan(angle/2) = (imgW/2.0/fx) / 1
         // 另外这里 cx 和 cy 分别为 imgW/2.0 和 imgH/2.0
@@ -63,7 +63,7 @@ public:
 
 private:
     // fx 和 fy 为图像空间到真实世界空间的尺度参数
-    float fx, fy, angle;
+    double fx, fy, angle;
 };
 
 #endif //CAMERA_H

@@ -13,7 +13,7 @@ Background {
 }
 
 Materials {
-    numMaterials 4
+    numMaterials 6
     Material { 
         refRatio 0
         emission 0 0 0
@@ -34,10 +34,20 @@ Materials {
         emission 12 12 12
         color 0 0 0
     }
+    Material { 
+        refRatio 0.5
+        emission 0 0 0
+        color 0.75 0 0
+    }
+    Material { 
+        refRatio 0.8
+        emission 0 0 0
+        color 0 0 0.75
+    }
 }
 
 Group {
-    numObjects 6
+    numObjects 8
     MaterialIndex 0
     Plane {
 	    normal 0 1 0
@@ -66,6 +76,16 @@ Group {
     MaterialIndex 3
     Sphere {
 	    center 0 5 10000
-        radius 9995.00001
+        radius 9995.0001
+    }
+    MaterialIndex 4
+    Sphere {
+	    center -2 2 -3
+        radius 2
+    }
+    MaterialIndex 5
+    Sphere {
+	    center 2 -2 -3
+        radius 2
     }
 }

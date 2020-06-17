@@ -26,7 +26,7 @@ public:
 
     }
 
-    bool intersect(const Ray &r, Hit &h, float tmin) override {
+    bool intersect(const Ray &r, Hit &h, double tmin) override {
         bool ret = false;
         for (int i = 0; i < objects.size(); ++i) {
             ret |= objects[i]->intersect(r, h, tmin);

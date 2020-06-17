@@ -23,7 +23,7 @@ public:
 		this->c = c;
 	}
 
-	bool intersect( const Ray& ray,  Hit& hit , float tmin) override {
+	bool intersect( const Ray& ray,  Hit& hit , double tmin) override {
         // T 点为射线与三角形所在平面交点
 		Hit tmph = hit;
 		bool flag = this->plane.intersect(ray, tmph, tmin);
@@ -33,7 +33,7 @@ public:
 		// 判断两次，判断 AT 是否在 AB 与 AC 之间，判断 BT 是否在 BA 与 BC 之间
 		Vector3f vecAB = this->b - this->a, vecAC = this->c - this->a, vecBA = -vecAB;
 		Vector3f vecBC = this->c - this->b, vecAT = pointT - this->a, vecBT = pointT - this->b;
-		float tmp = Vector3f::dot(Vector3f::cross(vecAB, vecAT), Vector3f::cross(vecAT, vecAC));
+		double tmp = Vector3f::dot(Vector3f::cross(vecAB, vecAT), Vector3f::cross(vecAT, vecAC));
 		if (sgn(tmp) < 0)
 			return false;
 		// sgn(tmp)>=0. AT 在 AB 与 AC 之间（tmp==0 时表示 T 在 AB 或 AC 上）

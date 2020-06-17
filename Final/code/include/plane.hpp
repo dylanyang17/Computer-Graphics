@@ -24,11 +24,11 @@ public:
 
     ~Plane() override = default;
 
-    bool intersect(const Ray &r, Hit &h, float tmin) override {
+    bool intersect(const Ray &r, Hit &h, double tmin) override {
         // 令射线起点为 A， 射线单位向量为 AB， A 到平面的垂足为 C, 平面上某点为 P, 交点为 T
         Vector3f pointA = r.getOrigin(), vecAP = this->p - pointA, vecAB = r.getDirection().normalized();
         Vector3f vecAC = this->normal * Vector3f::dot(vecAP, this->normal);
-        float cs = Vector3f::dot(vecAC, vecAB) / vecAC.length() / vecAB.length();
+        double cs = Vector3f::dot(vecAC, vecAB) / vecAC.length() / vecAB.length();
         if (sgn(vecAC.length()) == 0) {
             // 射线起点在面上
             return false;
@@ -38,7 +38,7 @@ public:
             return false;
         }
         Vector3f pointT = pointA + vecAB * (vecAC.length() / cs);
-        float t = calcT(r, pointT);
+        double t = calcT(r, pointT);
         if (t < tmin || t > h.getT())
             return false;
         Vector3f n = this->normal;

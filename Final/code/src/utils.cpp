@@ -1,6 +1,6 @@
 #include "utils.hpp"
 
-int sgn(float f) {
+int sgn(double f) {
     if (fabs(f) < 1e-13)
         return 0;
     else if (f > 0)
@@ -9,7 +9,7 @@ int sgn(float f) {
         return -1;
 }
 
-float calcT(const Ray &r, const Vector3f &p) {
+double calcT(const Ray &r, const Vector3f &p) {
     // 保证 p 在 r 所在直线上，计算 t 值
     // DEBUG: 注意不能随便选择一维，例如当 direction 为 (0,0,1) 而 tmpv2 为 (0,0,5) 时选择第一维便会出错
     Vector3f tmpv1 = r.getDirection(), tmpv2 = p - r.getOrigin();
@@ -20,7 +20,7 @@ float calcT(const Ray &r, const Vector3f &p) {
     return tmpv2[w] / tmpv1[w];
 }
 
-float calcReLU(const float &f) {
+double calcReLU(const double &f) {
     return ((f > 0) ? f : 0); 
 }
 

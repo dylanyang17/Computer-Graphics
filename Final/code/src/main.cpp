@@ -16,17 +16,16 @@
 
 using namespace std;
 
-inline float clamp(float x) {
+inline double clamp(double x) {
     return x < 0 ? 0 : x > 1 ? 1 : x;
 }
 
-inline int toInt(float x) {
-    return int(pow(clamp(x), 1/2.2)*255 + 0.5);
-}
-
 Vector3f gammaCorrection(const Vector3f &color) {
-    // TODO
-    // return Vector3f();
+    Vector3f ret;
+    for (int i = 0; i < 3; ++i) {
+        ret[i] = pow(clamp(color[i]), 1/2.2);
+    }
+    return ret;
 }
 
 Vector3f radiance(int ttx, int tty, int tts, const Ray &r, int depth, unsigned short *Xi, Group *group, const Vector3f background) {
@@ -41,8 +40,9 @@ Vector3f radiance(int ttx, int tty, int tts, const Ray &r, int depth, unsigned s
     Vector3f ret = m->emission;
     Vector3f hitPoint = r.pointAtParameter(hit.getT());
     Vector3f norm = hit.getNormal();
-    float refRatio = m->refRatio;
-    float p = f.x()>f.y() && f.x()>f.z() ? f.x() : f.y()>f.z() ? f.y() : f.z();
+    double refRatio = m->refRatio;
+    double p = f.x()>f.y() && f.x()>f.z() ? f.x() : f.y()>f.z() ? f.y() : f.z();
+    if (f.length() < 1e-8) return ret;  // 剪枝
     if (depth > 5) if (erand48(Xi) < min((double)p, 0.9)) f = f/p; else return ret;  // 轮盘赌
     int only = 0;  // 为 0 时表示两个部分都需要计算，为 1 时表示仅计算镜面反射部分，为 2 时表示仅计算漫反射部分
     if (depth > 2) only = (erand48(Xi) < refRatio) ? 1 : 2;
@@ -59,7 +59,7 @@ Vector3f radiance(int ttx, int tty, int tts, const Ray &r, int depth, unsigned s
         // 漫反射部分
         // u, v, w 为一组正交基，其中 w 即交点处法向 norm
         // r2s 即单位反射向量在 uv 平面上的投影长度
-        float r1 = 2*M_PI*erand48(Xi), r2=erand48(Xi), r2s=sqrt(r2);
+        double r1 = 2*M_PI*erand48(Xi), r2=erand48(Xi), r2s=sqrt(r2);
         Vector3f w = norm, u = Vector3f::cross(fabs(w.x())>0.1 ? Vector3f(0, 1, 0) : Vector3f(1, 0, 0), w).normalized(),
             v = Vector3f::cross(w, u);
         Vector3f newDir = (u*cos(r1)*r2s + v*sin(r1)*r2s + w*sqrt(1-r2)).normalized();
@@ -105,16 +105,16 @@ int main(int argc, char *argv[]) {
             for (int sx = 0; sx < 2; ++sx) {
                 for (int sy = 0; sy < 2; ++sy) {
                     for (int s = 0; s < spp; ++s) {
-                        float r1 = 2 * erand48(Xi), r2 = 2 * erand48(Xi);
-                        float dx = r1 < 1 ? sqrt(r1)-1 : 1-sqrt(2-r1);
-                        float dy = r2 < 1 ? sqrt(r2)-1 : 1-sqrt(2-r2);
+                        double r1 = 2 * erand48(Xi), r2 = 2 * erand48(Xi);
+                        double dx = r1 < 1 ? sqrt(r1)-1 : 1-sqrt(2-r1);
+                        double dy = r2 < 1 ? sqrt(r2)-1 : 1-sqrt(2-r2);
                         Ray ray = camera->generateRay(Vector2f((sx+0.5+dx)/2 + x, (sy+0.5+dy)/2 + y));
                         r = r + radiance(x, y, s, ray, 0, Xi, group, parser.getBackgroundColor()) / spp;
                     }
                     tmpColor[x][y] = tmpColor[x][y] + Vector3f(clamp(r.x()), clamp(r.y()), clamp(r.z()))*0.25;
                 }
             }
-            image.SetPixel(x, y, tmpColor[x][y]);
+            image.SetPixel(x, y, gammaCorrection(tmpColor[x][y]));
         }
     }
     image.SaveBMP(outputFile.c_str());
