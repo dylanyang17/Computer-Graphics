@@ -90,8 +90,8 @@ int main(int argc, char *argv[]) {
         std::cout << "Argument " << argNum << " is: " << argv[argNum] << std::endl;
     }
 
-    if (argc != 3) {
-        cout << "Usage: ./bin/Final <filename> <spp>" << endl;
+    if ((argc != 3 && argc != 4) || (argc == 4 && strcmp(argv[3], "-c")!=0)) {
+        cout << "Usage: ./bin/Final <filename> <spp> [-c]" << endl;
         return 1;
     }
 
@@ -111,13 +111,17 @@ int main(int argc, char *argv[]) {
 
     FILE *logFile = fopen((filename+".log").c_str(), "r");
     if (logFile != NULL && ~fscanf(logFile, "%d", &lastSpp)) {
-        printf("检测到log文件，是否继续上次运行？(Y/N)\n");
-        char c;
-        while ((c = getchar()) != EOF && c != 'Y' && c != 'N');
-        if (c=='Y') {
+        if (argc == 4) {
             lastImage = Image::LoadPPM((filename+".ppm").c_str());
         } else {
-            lastSpp = 0;
+            printf("检测到log文件，是否继续上次运行？(Y/N)\n");
+            char c;
+            while ((c = getchar()) != EOF && c != 'Y' && c != 'N');
+            if (c=='Y') {
+                lastImage = Image::LoadPPM((filename+".ppm").c_str());
+            } else {
+                lastSpp = 0;
+            }
         }
         fclose(logFile);
     } else lastSpp = 0;
