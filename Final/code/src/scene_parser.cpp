@@ -239,27 +239,28 @@ Material *SceneParser::parseMaterial() {
     char token[MAX_PARSER_TOKEN_LENGTH];
     char filename[MAX_PARSER_TOKEN_LENGTH];
     filename[0] = 0;
-    Vector3f diffuseColor(1, 1, 1), specularColor(0, 0, 0);
-    float shininess = 0;
+    float refRatio = 0;
+    Vector3f emission(0, 0, 0), color(0, 0, 0);
     getToken(token);
     assert (!strcmp(token, "{"));
     while (true) {
         getToken(token);
-        if (strcmp(token, "diffuseColor") == 0) {
-            diffuseColor = readVector3f();
-        } else if (strcmp(token, "specularColor") == 0) {
-            specularColor = readVector3f();
-        } else if (strcmp(token, "shininess") == 0) {
-            shininess = readFloat();
+        if (strcmp(token, "refRatio") == 0) {
+            refRatio = readFloat();
+        } else if (strcmp(token, "emission") == 0) {
+            emission = readVector3f();
+        } else if (strcmp(token, "color") == 0) {
+            color = readVector3f();
         } else if (strcmp(token, "texture") == 0) {
             // Optional: read in texture and draw it.
+            // TODO
             getToken(filename);
         } else {
             assert (!strcmp(token, "}"));
             break;
         }
     }
-    auto *answer = new Material(diffuseColor, specularColor, shininess);
+    auto *answer = new Material(refRatio, emission, color);
     return answer;
 }
 
