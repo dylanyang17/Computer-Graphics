@@ -14,6 +14,7 @@
 #include "plane.hpp"
 #include "triangle.hpp"
 #include "transform.hpp"
+#include "aabb.hpp"
 
 #define DegreesToRadians(x) ((M_PI * x) / 180.0f)
 
@@ -316,6 +317,8 @@ Object3D *SceneParser::parseObject(char token[MAX_PARSER_TOKEN_LENGTH]) {
         answer = (Object3D *) parseTriangleMesh();
     } else if (!strcmp(token, "Transform")) {
         answer = (Object3D *) parseTransform();
+    }  else if (!strcmp(token, "AABB")) {
+        answer = (Object3D *) parseAABB();
     } else {
         printf("Unknown token in parseObject: '%s'\n", token);
         exit(0);
@@ -506,6 +509,22 @@ Transform *SceneParser::parseTransform() {
     getToken(token);
     assert (!strcmp(token, "}"));
     return new Transform(matrix, object);
+}
+
+AABB *SceneParser::parseAABB() {
+    char token[MAX_PARSER_TOKEN_LENGTH];
+    getToken(token);
+    assert (!strcmp(token, "{"));
+    getToken(token);
+    assert (!strcmp(token, "minp"));
+    Vector3f minp = readVector3f();
+    getToken(token);
+    assert (!strcmp(token, "maxp"));
+    Vector3f maxp = readVector3f();
+    getToken(token);
+    assert (!strcmp(token, "}"));
+    assert (current_material != nullptr);
+    return new AABB(minp, maxp, current_material);
 }
 
 // ====================================================================

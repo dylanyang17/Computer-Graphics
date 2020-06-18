@@ -202,12 +202,6 @@ OpenMP_gomp_LIBRARY:FILEPATH=/usr/lib/gcc/x86_64-linux-gnu/9/libgomp.so
 OpenMP_pthread_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libpthread.so
 
 //Value Computed by CMake
-PA1_BINARY_DIR:STATIC=/home/yyr/Work/Computer-Graphics/Final/code/build
-
-//Value Computed by CMake
-PA1_SOURCE_DIR:STATIC=/home/yyr/Work/Computer-Graphics/Final/code
-
-//Value Computed by CMake
 vecmath_BINARY_DIR:STATIC=/home/yyr/Work/Computer-Graphics/Final/code/build/deps/vecmath
 
 //Value Computed by CMake

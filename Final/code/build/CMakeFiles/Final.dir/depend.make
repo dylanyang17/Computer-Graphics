@@ -58,6 +58,7 @@ CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../deps/vecmath/include/Vector2f.h
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../deps/vecmath/include/Vector3f.h
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../deps/vecmath/include/Vector4f.h
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../deps/vecmath/include/vecmath.h
+CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/aabb.hpp
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/camera.hpp
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/group.hpp
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/hit.hpp

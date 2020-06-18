@@ -46,6 +46,16 @@ Vector3f.h
 Vector4f.h
 ../deps/vecmath/include/Vector4f.h
 
+../include/aabb.hpp
+object3d.hpp
+../include/object3d.hpp
+utils.hpp
+../include/utils.hpp
+vecmath.h
+-
+cmath
+-
+
 ../include/camera.hpp
 ray.hpp
 ../include/ray.hpp
@@ -73,12 +83,6 @@ vecmath.h
 -
 ray.hpp
 ../include/ray.hpp
-
-../include/image.hpp
-cassert
--
-vecmath.h
--
 
 ../include/light.hpp
 Vector3f.h
@@ -182,34 +186,6 @@ vecmath.h
 ray.hpp
 ../include/ray.hpp
 
-/home/yyr/Work/Computer-Graphics/Final/code/src/main.cpp
-cassert
--
-cstdio
--
-cstdlib
--
-cstring
--
-cmath
--
-iostream
--
-scene_parser.hpp
-/home/yyr/Work/Computer-Graphics/Final/code/src/scene_parser.hpp
-image.hpp
-/home/yyr/Work/Computer-Graphics/Final/code/src/image.hpp
-camera.hpp
-/home/yyr/Work/Computer-Graphics/Final/code/src/camera.hpp
-group.hpp
-/home/yyr/Work/Computer-Graphics/Final/code/src/group.hpp
-light.hpp
-/home/yyr/Work/Computer-Graphics/Final/code/src/light.hpp
-string
--
-cmath
--
-
 /home/yyr/Work/Computer-Graphics/Final/code/src/scene_parser.cpp
 cstdio
 -
@@ -241,4 +217,6 @@ triangle.hpp
 /home/yyr/Work/Computer-Graphics/Final/code/src/triangle.hpp
 transform.hpp
 /home/yyr/Work/Computer-Graphics/Final/code/src/transform.hpp
+aabb.hpp
+/home/yyr/Work/Computer-Graphics/Final/code/src/aabb.hpp
 
