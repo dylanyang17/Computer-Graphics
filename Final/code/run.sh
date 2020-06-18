@@ -2,4 +2,4 @@
 
 bash build.sh
 
-bin/Final testcases/my_scene2 $*
+bin/Final testcases/my_scene4 $*

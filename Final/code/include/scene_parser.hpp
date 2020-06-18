@@ -59,6 +59,7 @@ private:
 
     void parseFile();
     void parsePerspectiveCamera();
+    void parseLensCamera();
     void parseBackground();
     void parseLights();
     Light *parsePointLight();

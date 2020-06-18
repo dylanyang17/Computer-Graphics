@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
         fclose(logFile);
     } else lastSpp = 0;
 
-  #pragma omp parallel for schedule(dynamic)
+   #pragma omp parallel for schedule(dynamic)
     for (int x = 0; x < camera->getWidth(); ++x) {
         fprintf(stderr, "\rRendering (%d spp) %5.2f%%", spp, 100.*x/(camera->getWidth()-1));
         for (int y = 0; y < camera->getHeight(); ++y) {

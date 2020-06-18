@@ -77,6 +77,8 @@ void SceneParser::parseFile() {
     while (getToken(token)) {
         if (!strcmp(token, "PerspectiveCamera")) {
             parsePerspectiveCamera();
+        } else if (!strcmp(token, "LensCamera")) {
+            parseLensCamera();
         } else if (!strcmp(token, "Background")) {
             parseBackground();
         } else if (!strcmp(token, "Lights")) {
@@ -122,6 +124,43 @@ void SceneParser::parsePerspectiveCamera() {
     getToken(token);
     assert (!strcmp(token, "}"));
     camera = new PerspectiveCamera(center, direction, up, width, height, angle_radians);
+}
+
+void SceneParser::parseLensCamera() {
+    char token[MAX_PARSER_TOKEN_LENGTH];
+    // read in the camera parameters
+    getToken(token);
+    assert (!strcmp(token, "{"));
+    getToken(token);
+    assert (!strcmp(token, "center"));
+    Vector3f center = readVector3f();
+    getToken(token);
+    assert (!strcmp(token, "direction"));
+    Vector3f direction = readVector3f();
+    getToken(token);
+    assert (!strcmp(token, "up"));
+    Vector3f up = readVector3f();
+    getToken(token);
+    assert (!strcmp(token, "width"));
+    int width = readInt();
+    getToken(token);
+    assert (!strcmp(token, "height"));
+    int height = readInt();
+    getToken(token);
+    assert (!strcmp(token, "scale"));
+    int scale = readInt();
+    getToken(token);
+    assert (!strcmp(token, "focalDist"));
+    double focalDist = readDouble();
+    getToken(token);
+    assert (!strcmp(token, "imageDist"));
+    double imageDist = readDouble();
+    getToken(token);
+    assert (!strcmp(token, "aperture"));
+    double aperture = readDouble();
+    getToken(token);
+    assert (!strcmp(token, "}"));
+    camera = new LensCamera(center, direction, up, width, height, scale, focalDist, imageDist, aperture);
 }
 
 void SceneParser::parseBackground() {

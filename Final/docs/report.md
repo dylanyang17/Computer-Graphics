@@ -41,8 +41,9 @@ Materials {
 
 ### 相机参数
 
-在 PerspectiveCamera 的基础上加入：
+在 Camera 的基础上加入：
 
+* scale(整形，表示实际像平面大小到图像大小的比例尺度，越大则视角越小)
 * focalDist(焦距f)
 * imageDist(成像平面到透镜的距离p')
 * aperture(光圈直径，即在透镜上随机选点时的圆半径)
