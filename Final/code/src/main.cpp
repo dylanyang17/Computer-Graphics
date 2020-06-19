@@ -55,9 +55,9 @@ Vector3f radiance(int ttx, int tty, int tts, const Ray &r, int depth, unsigned s
     double diffuseRatio = m -> diffuseRatio;
     double p = f.x()>f.y() && f.x()>f.z() ? f.x() : f.y()>f.z() ? f.y() : f.z();
     if (f.length() < 1e-8) return ret;  // 剪枝
-    if (depth > 5) if (erand48(Xi) < min((double)p, 0.9)) f = f/p; else return ret;  // 轮盘赌
+    if (depth > 4) if (erand48(Xi) < min((double)p, 0.9)) f = f/p; else return ret;  // 轮盘赌
     int only = 0;  // 为 1 时表示仅计算漫反射部分，为 2 时表示仅计算折/反射部分，为 0 表示均计算
-    if (depth > 2) only = (erand48(Xi) < diffuseRatio) ? 1 : 2;
+    if (depth > 1) only = (erand48(Xi) < diffuseRatio) ? 1 : 2;
     Vector3f sum = Vector3f::ZERO;  // 存储从该交点出发之后的颜色效果总和
     if ((only == 0 || only == 1) && diffuseRatio > 1e-5) {
         // 漫反射部分

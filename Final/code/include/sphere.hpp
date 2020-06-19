@@ -3,6 +3,7 @@
 
 #include "object3d.hpp"
 #include "utils.hpp"
+#include "aabb.hpp"
 #include <vecmath.h>
 #include <cmath>
 
@@ -25,6 +26,12 @@ public:
     ~Sphere() override = default;
 
     bool intersect(const Ray &r, Hit &h, double tmin) override {
+        // AABB 包围盒
+        Vector3f rVec = Vector3f(radius, radius, radius);
+        AABB aabb(center-rVec, center+rVec, material);
+        Hit th = h;
+        if (!aabb.intersect(r, th, tmin)) return false;
+
         // 令 A 点为射线起点， AB 为射线单位向量， O 点为球心， C 点为 O 点到 AB 的垂足
         Vector3f pointA = r.getOrigin(), pointO = this->center;
         Vector3f vecAB = r.getDirection().normalized(), vecAO = pointO - pointA;

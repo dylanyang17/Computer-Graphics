@@ -2,9 +2,9 @@ LensCamera {
     center 0 -20 0 
     direction 0 1 0
     up 0 0 1
-    width 640
-    height 480
-    scale 8000
+    width 1280
+    height 1024
+    scale 16000
     focalDist 0.05014047
     imageDist 0.05031446
     aperture 0.5
@@ -58,7 +58,7 @@ Materials {
     }
     Material { 
         diffuseRatio 1
-        emission 2 2 2
+        emission 15 15 15
         color 0 0 0
     }
     Material { 
@@ -157,7 +157,7 @@ Group {
         YRotate 50
         XRotate 10
         TriangleMesh {
-            obj_file mesh/bunny_200.obj
+            obj_file mesh/bunny_1k.obj
         }
     }
     MaterialIndex 13
