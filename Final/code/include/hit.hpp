@@ -34,6 +34,10 @@ public:
         return t;
     }
 
+    bool getIn() const {
+        return in;
+    }
+
     Material *getMaterial() const {
         return material;
     }
@@ -42,13 +46,15 @@ public:
         return normal;
     }
 
-    void set(double _t, Material *m, const Vector3f &n) {
+    void set(double _t, Material *m, const Vector3f &n, bool in = false) {
         t = _t;
         material = m;
         normal = n;
+        this->in = in;
     }
 
 private:
+    bool in;  // 是否为射入 （只在玻璃球处使用）
     double t;
     Material *material;
     Vector3f normal;

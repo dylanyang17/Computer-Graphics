@@ -31,32 +31,43 @@ public:
         Vector3f vecAC = vecAB * Vector3f::dot(vecAB, vecAO);
         Vector3f vecCO = pointO - (pointA + vecAC);
         double dis = vecCO.length();
-        // 射线起点在圆上或圆内
-        if (sgn(vecAO.length() - this->radius) <= 0)
-            return false;
-        // 射线方向与到圆心的方向相反
-        if (sgn(Vector3f::dot(vecAB, vecAO)) <= 0)
-            return false;
+        // // 射线起点在圆上或圆内
+        // if (sgn(vecAO.length() - this->radius) <= 0)
+        //     return false;
+        // // 射线方向与到圆心的方向相反
+        // if (sgn(Vector3f::dot(vecAB, vecAO)) <= 0)
+        //     return false;
         // 射线所在直线与圆无交点
         if (sgn(dis - this->radius) > 0)
             return false;
         else if (sgn(dis - this->radius) == 0) {
             // 相切，此时 C 点即交点
+            if (sgn(vecAC.length()-radius) == 0) {
+                // 排除起点即 C 点的情况
+                return false;
+            }
             double t = calcT(r, pointA + vecAC);
             if (t < tmin || t > h.getT())
                 return false;
             h.set(t, this->material, -vecCO.normalized());
             return true;
         } else {
-            // 有两个交点，找最近的一个，令其为 D 点
-            // NOTE: 暂时默认射线起点在球外部
-            double lenAD = vecAC.length() - sqrt(this->radius * this->radius - vecCO.squaredLength());
-            assert(sgn(lenAD) > 0);
-            Vector3f pointD = pointA + lenAD * vecAB;
-            double t = calcT(r, pointD);
-            if (t < tmin || t > h.getT())
+            // 有两个交点，找满足 t>tmin 的最近的一个，令其为 D 点
+            double tmp = sqrt(this->radius * this->radius - vecCO.squaredLength());
+            double t = vecAC.length() * (Vector3f::dot(vecAC, vecAB)>0 ? 1 : -1) - tmp;  // 特别的，这是有向长度
+            if (t < tmin) {
+                // 第一个点不符合，找另一个点
+                t += 2 * tmp;
+                if (t < tmin || t > h.getT()) {
+                    return false;  // 均不符合
+                }
+            } else if (t > h.getT()) {
                 return false;
-            h.set(t, this->material, (pointD - pointO).normalized());
+            }
+            Vector3f pointD = r.pointAtParameter(t);
+            Vector3f vecOD = pointD-pointO, vecAD = pointD-pointA;
+            bool into = Vector3f::dot(vecOD, vecAD)>0 ? false : true;
+            h.set(t, this->material, (vecOD * (into ? 1 : -1)).normalized(), into);
             return true;
         }
     }

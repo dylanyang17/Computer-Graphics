@@ -72,13 +72,31 @@ Vector3f radiance(int ttx, int tty, int tts, const Ray &r, int depth, unsigned s
         sum = sum + tmp;
     }    
     if ((only == 0 || only == 2) && 1-diffuseRatio > 1e-5) {
-        // 镜面反射部分
-        Vector3f in = r.getDirection().normalized();
-        Vector3f newDir = (in - Vector3f::dot(in, norm)*2*norm).normalized();
-        Vector3f tmp = radiance(ttx, tty, tts, Ray(hitPoint, newDir), depth+1, Xi, group, background);
+        // 镜面反射+折射部分
+        Vector3f oldDir = r.getDirection().normalized();
+        Vector3f reflDir = (oldDir - Vector3f::dot(oldDir, norm)*2*norm).normalized();
+        Vector3f reflRad = radiance(ttx, tty, tts, Ray(hitPoint, reflDir), depth+1, Xi, group, background);
         if (!m->isGlass) {
-          if (only == 0) tmp = tmp * (1-diffuseRatio);
-          sum = sum + tmp;
+            if (only == 0) reflRad = reflRad * (1-diffuseRatio);
+            sum = sum + reflRad;
+        } else {
+            bool into = hit.getIn();                // Ray from outside going in? 
+            double nc=1, nt=1.5, nnt=into?nc/nt:nt/nc, ddn=Vector3f::dot(norm, r.getDirection()), cos2t; 
+            if ((cos2t=1-nnt*nnt*(1-ddn*ddn))<0) {   // Total internal reflection 
+                if (only == 0) reflRad = reflRad * (1-diffuseRatio);
+                sum = sum + reflRad;
+            } else {
+                Vector3f n = into ? (norm) : (-norm);
+                Vector3f transDir = (oldDir*nnt - norm*(ddn*nnt+sqrt(cos2t))).normalized(); 
+                double a = nt - nc, b = nt + nc, R0 = a*a / (b*b), c = 1-(into?-ddn:Vector3f::dot(transDir, n)); 
+                double Re = R0 + (1-R0)*c*c*c*c*c, Tr = 1 - Re, P= .25 + .5*Re, RP = Re / P, TP = Tr / (1-P); 
+                Vector3f transRad = radiance(ttx, tty, tts, Ray(hitPoint, transDir), depth+1, Xi, group, background);
+                Vector3f tmp = depth>2 ? (erand48(Xi)<P ?   // Russian roulette 
+                    reflRad * RP : transRad * TP) : 
+                    reflRad * Re + transRad * Tr;
+                if (only == 0) tmp = tmp * (1-diffuseRatio);
+                sum = sum + tmp;
+            }
         }
     }
     ret = ret + f * sum;
@@ -128,7 +146,7 @@ int main(int argc, char *argv[]) {
         fclose(logFile);
     } else lastSpp = 0;
 
-  #pragma omp parallel for schedule(dynamic)
+   #pragma omp parallel for schedule(dynamic)
     for (int x = 0; x < camera->getWidth(); ++x) {
         fprintf(stderr, "\rRendering (%d spp) %5.2f%%", spp, 100.*x/(camera->getWidth()-1));
         for (int y = 0; y < camera->getHeight(); ++y) {

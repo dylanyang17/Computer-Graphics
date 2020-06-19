@@ -1,14 +1,11 @@
 
-LensCamera {
-    center 0 -25 0 
+PerspectiveCamera {
+    center 0 -40 0 
     direction 0 1 0
     up 0 0 1
+    angle 35
     width 640
     height 480
-    scale 8000
-    focalDist 0.0500853674
-    imageDist 0.05031446
-    aperture 0.5
 }
 
 Background {
@@ -38,8 +35,7 @@ Materials {
         color 0 0 0
     }
     Material { 
-        isGlass
-        diffuseRatio 0
+        diffuseRatio 0.1
         emission 0 0 0
         color 0.25 0.25 0.25
     }
@@ -50,9 +46,9 @@ Materials {
     }
     Material { 
         isGlass
-        diffuseRatio 0.3
+        diffuseRatio 0
         emission 0 0 0
-        color 0.545 0.196 0.0314
+        color 0.545 0.396 0.0314
     }
     Material { 
         diffuseRatio 1
@@ -72,65 +68,15 @@ Materials {
 }
 
 Group {
-    numObjects 12
-    MaterialIndex 0
-    Plane {
-	    normal 0 1 0
-        offset 10
-    }
-    MaterialIndex 0
-    Plane {
-	    normal 0 0 1
-        offset 5
-    }
-    MaterialIndex 0
-    Plane {
-	    normal 0 0 -1
-        offset 5
-    }
-    MaterialIndex 1
-    Plane {
-	    normal 1 0 0
-        offset 8
-    }
-    MaterialIndex 2
-    Plane {
-	    normal -1 0 0
-        offset 8
-    }
-    MaterialIndex 3
-    Sphere {
-	    center 0 5 10000
-        radius 9995.0007
-    }
+    numObjects 2
     MaterialIndex 8
     Sphere {
-	    center 0 -8 10000
-        radius 9995.0007
-    }
-    MaterialIndex 4
-    Sphere {
-	    center -5 -2 -3
-        radius 2
-    }
-    MaterialIndex 5
-    Sphere {
-	    center 5 -8 -3
-        radius 2
-    }
-    MaterialIndex 6
-    Sphere {
-	    center -0.5 -13 -3
-        radius 2
-    }
-    MaterialIndex 7
-    Plane {
-	    normal 0 -1 0
-        offset 2000
+	    center 0 -5 0
+        radius 3
     }
     MaterialIndex 9
     Sphere {
-	    center -3 -22 -3
-        radius 2
+	    center 0 -40 0
+        radius 40
     }
 }
