@@ -7,7 +7,7 @@ LensCamera {
     scale 8000
     focalDist 0.05014047
     imageDist 0.05031446
-    aperture 0.2
+    aperture 0.5
 }
 
 Background {
@@ -112,7 +112,7 @@ Materials {
 }
 
 Group {
-    numObjects 22
+    numObjects 23
     MaterialIndex 12
     Plane {
 	    normal 0 1 0
@@ -141,7 +141,7 @@ Group {
     MaterialIndex 8
     Sphere {
 	    center 0 -8 10000
-        radius 9995.0007
+        radius 9995.0001
     }
     MaterialIndex 7
     Plane {
@@ -229,5 +229,10 @@ Group {
     Sphere {
 	    center -3.2 -17.5 -3
         radius 2
+    }
+    MaterialIndex 15
+    Sphere {
+	    center 1 -7.1 1.8
+        radius 0.18
     }
 }
