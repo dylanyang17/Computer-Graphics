@@ -7,6 +7,7 @@
 #include "Vector2f.h"
 #include "Vector3f.h"
 
+class AABB;
 
 class Mesh : public Object3D {
 
@@ -22,6 +23,7 @@ public:
         int x[3]{};
     };
 
+    std::vector<int> seq;
     std::vector<Vector3f> v;
     std::vector<TriangleIndex> t;
     std::vector<Vector3f> n;
@@ -31,6 +33,10 @@ private:
 
     // Normal can be used for light estimation
     void computeNormal();
+
+    int buildTree(int ll, int rr, int dim);
+
+    AABB getAABB(int id);
 };
 
 #endif

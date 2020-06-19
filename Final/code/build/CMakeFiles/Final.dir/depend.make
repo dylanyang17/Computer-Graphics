@@ -40,6 +40,7 @@ CMakeFiles/Final.dir/src/mesh.cpp.o: ../deps/vecmath/include/Vector2f.h
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../deps/vecmath/include/Vector3f.h
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../deps/vecmath/include/Vector4f.h
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../deps/vecmath/include/vecmath.h
+CMakeFiles/Final.dir/src/mesh.cpp.o: ../include/aabb.hpp
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../include/hit.hpp
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../include/material.hpp
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../include/mesh.hpp

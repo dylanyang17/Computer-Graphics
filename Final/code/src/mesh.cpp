@@ -1,10 +1,25 @@
 #include "mesh.hpp"
+#include "aabb.hpp"
 #include <fstream>
 #include <iostream>
 #include <algorithm>
 #include <cstdlib>
 #include <utility>
 #include <sstream>
+
+const int MAXNODE = 5000005;
+
+// KD-Tree 结点
+struct Node {
+    int child[2];
+    AABB aabb;
+
+    Node() {
+        child[0] = child[1] = 0;
+    }
+} node[MAXNODE];
+
+int ndnum = 0;
 
 bool Mesh::intersect(const Ray &r, Hit &h, double tmin) {
 
@@ -80,6 +95,10 @@ Mesh::Mesh(const char *filename, Material *material) : Object3D(material) {
         }
     }
     computeNormal();
+    for (int i = 0; i < t.size(); ++i) {
+        seq.push_back(i);
+    }
+    buildTree(0, t.size()-1, 0);
 
     f.close();
 }
@@ -93,4 +112,33 @@ void Mesh::computeNormal() {
         b = Vector3f::cross(a, b);
         n[triId] = b / b.length();
     }
+}
+
+AABB Mesh::getAABB(int id) {
+    AABB aabb;
+    for (int j = 0; j < 3; ++j) {
+        aabb.minp[j] = MAXDOUBLE;
+        aabb.maxp[j] = -MAXDOUBLE;
+    }
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            aabb.minp[j] = std::min(aabb.minp[j], v[t[id][i]][j]);
+            aabb.maxp[j] = std::max(aabb.maxp[j], v[t[id][i]][j]);
+        }
+    }
+    return aabb;
+}
+
+int Mesh::buildTree(int ll, int rr, int dim) {
+    if (ll > rr)
+        return 0;
+    int s = ++ndnum;
+    if (ll == rr) {
+        node[s].aabb = getAABB(seq[ll]);
+        return s;
+    }
+    int mid = (ll+rr) / 2;
+    // TODO: nth_element ... calc aabb ...
+    node[s].child[0] = buildTree(ll, mid-1, (dim+1)%3);
+    node[s].child[1] = buildTree(mid+1, rr, (dim+1)%3);
 }

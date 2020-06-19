@@ -61,7 +61,6 @@ public:
         return ret;
     }
 
-protected:
     Vector3f maxp, minp;
 };
 

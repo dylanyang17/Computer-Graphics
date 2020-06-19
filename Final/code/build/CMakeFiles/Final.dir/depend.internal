@@ -41,6 +41,7 @@ CMakeFiles/Final.dir/src/mesh.cpp.o
  ../deps/vecmath/include/Vector3f.h
  ../deps/vecmath/include/Vector4f.h
  ../deps/vecmath/include/vecmath.h
+ ../include/aabb.hpp
  ../include/hit.hpp
  ../include/material.hpp
  ../include/mesh.hpp

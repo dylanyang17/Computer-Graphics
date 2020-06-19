@@ -45,7 +45,7 @@ Materials {
         color 0.25 0.75 0.25
     }
     Material { 
-        refRatio 0.8
+        refRatio 1
         emission 0 0 0
         color 0.545 0.396 0.0314
     }
