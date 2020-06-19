@@ -2,9 +2,9 @@ LensCamera {
     center 0 -20 0 
     direction 0 1 0
     up 0 0 1
-    width 1280
-    height 1024
-    scale 16000
+    width 1920
+    height 1440
+    scale 24000
     focalDist 0.05014047
     imageDist 0.05031446
     aperture 0.5
