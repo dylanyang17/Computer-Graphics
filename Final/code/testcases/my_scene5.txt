@@ -1,11 +1,13 @@
-
-PerspectiveCamera {
-    center 0 -40 0 
+LensCamera {
+    center 0 -20 0 
     direction 0 1 0
     up 0 0 1
-    angle 35
     width 640
     height 480
+    scale 8000
+    focalDist 0.05014047
+    imageDist 0.05031446
+    aperture 0.2
 }
 
 Background {
@@ -13,7 +15,7 @@ Background {
 }
 
 Materials {
-    numMaterials 10
+    numMaterials 18
     Material { 
         diffuseRatio 1
         emission 0 0 0
@@ -22,16 +24,16 @@ Materials {
     Material { 
         diffuseRatio 1
         emission 0 0 0
-        color 0.25 0.25 0.75
+        color 0.2 0.2 0.75
     }
     Material { 
         diffuseRatio 1
         emission 0 0 0
-        color 0.75 0.25 0.25
+        color 0.75 0.15 0.15
     }
     Material { 
         diffuseRatio 1
-        emission 0 2 2
+        emission 1.3 0.3 0.3
         color 0 0 0
     }
     Material { 
@@ -40,12 +42,12 @@ Materials {
         color 0.25 0.25 0.25
     }
     Material { 
-        diffuseRatio 0.5
-        emission 0 0 0
-        color 0.25 0.75 0.25
+        diffuseRatio 0
+        emission 0.04 0.04 0.04
+        color 0.9 0.9 0.9
     }
     Material { 
-        diffuseRatio 0
+        diffuseRatio 1
         emission 0 0 0
         color 0.545 0.396 0.0314
     }
@@ -56,7 +58,7 @@ Materials {
     }
     Material { 
         diffuseRatio 1
-        emission 0.5 0.7 0.1
+        emission 2 2 2
         color 0 0 0
     }
     Material { 
@@ -64,39 +66,77 @@ Materials {
         emission 0 0 0
         color 0.09412 0.4549 0.80392
     }
+    Material { 
+        diffuseRatio 1
+        emission 0 0 0
+        color 0.75 0.75 0.75
+        texture texture/grid.ppm
+    }
+    Material { 
+        diffuseRatio 0.25
+        emission 0 0 0
+        color 0.75 0.75 0.75
+    }
+    Material { 
+        diffuseRatio 1
+        emission 0 0 0
+        color 1 0.84314 0
+    }
+    Material { 
+        diffuseRatio 0.25
+        emission 0.15 0.075 0
+        color 0.8 0.4 0
+    }
+    Material { 
+        diffuseRatio 0.1
+        isGlass
+        emission 0 0 0
+        color 0.8 0.75 0.4
+    }
+    Material { 
+        diffuseRatio 0.25
+        emission 0.085 0.01 0.01
+        color 0.85 0.1 0.1
+    }
+    Material { 
+        diffuseRatio 0.25
+        emission 0.01 0.01 0.085
+        color 0.1 0.1 0.85
+    }
+    Material { 
+        diffuseRatio 0.25
+        emission 0.09 0.005 0.005
+        color 0.9 0.05 0.05
+    }
+    
 }
 
 Group {
-    numObjects 9
-    MaterialIndex 0
+    numObjects 22
+    MaterialIndex 12
     Plane {
 	    normal 0 1 0
         offset 10
     }
-    MaterialIndex 0
+    MaterialIndex 11
     Plane {
 	    normal 0 0 1
         offset 5
     }
-    MaterialIndex 0
+    MaterialIndex 10
     Plane {
 	    normal 0 0 -1
         offset 5
     }
-    MaterialIndex 1
+    MaterialIndex 2
     Plane {
 	    normal 1 0 0
         offset 8
     }
-    MaterialIndex 2
+    MaterialIndex 1
     Plane {
 	    normal -1 0 0
         offset 8
-    }
-    MaterialIndex 3
-    Sphere {
-	    center 0 5 10000
-        radius 9995.0007
     }
     MaterialIndex 8
     Sphere {
@@ -108,10 +148,86 @@ Group {
 	    normal 0 -1 0
         offset 2000
     }
-    MaterialIndex 6
-    AABB {
-	    minp -1 -2 -5
-        maxp 2 1 -2
+    MaterialIndex 5
+    Transform {
+		Translate 2 -7 -2
+        Scale 15 15 15
+        XRotate 32
+        ZRotate 48
+        YRotate 50
+        XRotate 10
+        TriangleMesh {
+            obj_file mesh/bunny_200.obj
+        }
     }
-
+    MaterialIndex 13
+    Sphere {
+	    center -0.1 -7 3.2
+        radius 0.5
+    }
+    MaterialIndex 14
+    Sphere {
+	    center 0 -6.9 4.2
+        radius 0.3
+    }
+    MaterialIndex 15
+    Sphere {
+	    center -2.8 -7.9 2
+        radius 0.7
+    }
+    MaterialIndex 16
+    Sphere {
+	    center 2.5 -6.9 1
+        radius 0.5
+    }
+    MaterialIndex 13
+    Sphere {
+	    center -5 -8.9 -1
+        radius 0.9
+    }
+    MaterialIndex 14
+    Sphere {
+	    center 4 -10.9 0
+        radius 0.85
+    }
+    MaterialIndex 15
+    Sphere {
+	    center 3 -6.9 -2
+        radius 0.8
+    }
+    MaterialIndex 16
+    Sphere {
+	    center -4 -3.8 0.6
+        radius 0.5
+    }
+    MaterialIndex 16
+    Sphere {
+	    center 3 -13.5 -3.65
+        radius 1.35
+    }
+    MaterialIndex 14
+    Sphere {
+	    center 0.9 -4 1.5
+        radius 0.3
+    }
+    MaterialIndex 17
+    Sphere {
+	    center -3.5 -10 -3.7
+        radius 1.3
+    }
+    MaterialIndex 14
+    Sphere {
+	    center -1.8 -1 -3.5
+        radius 1.6
+    }
+    MaterialIndex 13
+    Sphere {
+	    center -1 -25.5 -3.5
+        radius 1.7
+    }
+    MaterialIndex 13
+    Sphere {
+	    center -3.2 -17.5 -3
+        radius 2
+    }
 }

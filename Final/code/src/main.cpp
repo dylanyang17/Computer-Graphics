@@ -48,9 +48,9 @@ Vector3f radiance(int ttx, int tty, int tts, const Ray &r, int depth, unsigned s
         return background;
     Material *m = hit.getMaterial();
     // 令单位入射向量为 in，单位法向为 norm
-    Vector3f f = m->color;
-    Vector3f ret = m->emission;
     Vector3f hitPoint = r.pointAtParameter(hit.getT());
+    Vector3f f = m->getColor(hitPoint);
+    Vector3f ret = m->getEmission(hitPoint);
     Vector3f norm = hit.getNormal();
     double diffuseRatio = m -> diffuseRatio;
     double p = f.x()>f.y() && f.x()>f.z() ? f.x() : f.y()>f.z() ? f.y() : f.z();

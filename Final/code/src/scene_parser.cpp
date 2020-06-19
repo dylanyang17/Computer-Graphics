@@ -18,6 +18,8 @@
 
 #define DegreesToRadians(x) ((M_PI * x) / 180.0f)
 
+extern Vector3f revGammaCorrection(const Vector3f &color);
+
 SceneParser::SceneParser(const char *filename) {
 
     // initialize some reasonable default values
@@ -280,6 +282,7 @@ Material *SceneParser::parseMaterial() {
     Vector3f emission(0, 0, 0), color(0, 0, 0);
     getToken(token);
     assert (!strcmp(token, "{"));
+    Image *texture = NULL;
     while (true) {
         getToken(token);
         if (strcmp(token, "diffuseRatio") == 0) {
@@ -294,12 +297,18 @@ Material *SceneParser::parseMaterial() {
             // Optional: read in texture and draw it.
             // TODO
             getToken(filename);
+            texture = Image::LoadPPM(filename);
+            for (int i = 0; i < texture->Width(); ++i) {
+                for (int j = 0; j < texture->Height(); ++j) {
+                    texture->SetPixel(i, j, revGammaCorrection(texture->GetPixel(i, j)));
+                }
+            }
         } else {
             assert (!strcmp(token, "}"));
             break;
         }
     }
-    auto *answer = new Material(diffuseRatio, isGlass, emission, color);
+    auto *answer = new Material(diffuseRatio, isGlass, emission, color, texture);
     return answer;
 }
 

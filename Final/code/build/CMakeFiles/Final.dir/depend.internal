@@ -43,6 +43,7 @@ CMakeFiles/Final.dir/src/mesh.cpp.o
  ../deps/vecmath/include/vecmath.h
  ../include/aabb.hpp
  ../include/hit.hpp
+ ../include/image.hpp
  ../include/material.hpp
  ../include/mesh.hpp
  ../include/object3d.hpp
@@ -64,6 +65,7 @@ CMakeFiles/Final.dir/src/scene_parser.cpp.o
  ../include/camera.hpp
  ../include/group.hpp
  ../include/hit.hpp
+ ../include/image.hpp
  ../include/light.hpp
  ../include/material.hpp
  ../include/mesh.hpp

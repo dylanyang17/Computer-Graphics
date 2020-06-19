@@ -42,6 +42,7 @@ CMakeFiles/Final.dir/src/mesh.cpp.o: ../deps/vecmath/include/Vector4f.h
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../deps/vecmath/include/vecmath.h
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../include/aabb.hpp
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../include/hit.hpp
+CMakeFiles/Final.dir/src/mesh.cpp.o: ../include/image.hpp
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../include/material.hpp
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../include/mesh.hpp
 CMakeFiles/Final.dir/src/mesh.cpp.o: ../include/object3d.hpp
@@ -63,6 +64,7 @@ CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/aabb.hpp
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/camera.hpp
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/group.hpp
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/hit.hpp
+CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/image.hpp
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/light.hpp
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/material.hpp
 CMakeFiles/Final.dir/src/scene_parser.cpp.o: ../include/mesh.hpp

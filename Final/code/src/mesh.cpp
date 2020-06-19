@@ -22,21 +22,37 @@ struct Node {
 
 int ndnum = 0;
 
+// KD 树求交
 bool Mesh::intersectKD(int s, const Ray &r, Hit &h, double tmin) {
-    if (node[s].aabb.intersect(r, h, tmin) == false)
+    Hit th = h;
+    if (!s || node[s].aabb.intersect(r, th, tmin) == false)
         return false;
-    triangles[node[s].leaf]
+    bool ret = triangles[node[s].leaf].intersect(r, h, tmin);
+    for (int i = 0; i < 2; ++i)
+        ret |= intersectKD(node[s].child[i], r, h, tmin);
+    return ret;
+}
+
+// 暴力求交
+bool Mesh::intersectBF(const Ray &r, Hit &h, double tmin) {
+    bool ret = false;
+    for (int triId = 0; triId < (int) t.size(); ++triId) {
+        ret |= triangles[triId].intersect(r, h, tmin);
+    }
+    return ret;
 }
 
 bool Mesh::intersect(const Ray &r, Hit &h, double tmin) {
 
     // Optional: Change this brute force method into a faster one.
     // 遍历所有存储的三角形依次求交
-    bool result = false;
-    for (int triId = 0; triId < (int) t.size(); ++triId) {
-        result |= triangles[triId].intersect(r, h, tmin);
+    // return intersectBF(r, h, tmin);
+    bool f = intersectKD(root, r, h, tmin);
+    if (f == true) {
+        f = false;
+        f = true;
     }
-    return result;
+    return f;
 }
 
 Mesh::Mesh(const char *filename, Material *material) : Object3D(material) {
@@ -119,7 +135,7 @@ Mesh::Mesh(const char *filename, Material *material) : Object3D(material) {
         }
         m.push_back(mm);
     }
-    buildTree(0, t.size()-1, 0);
+    root = buildTree(0, t.size()-1, 0);
 
     f.close();
 }
@@ -137,11 +153,11 @@ void Mesh::computeNormal() {
 
 AABB Mesh::getAABB(int id) {
     // id 为面片序号
-    AABB aabb;
-    for (int j = 0; j < 3; ++j) {
-        aabb.minp[j] = MAXDOUBLE;
-        aabb.maxp[j] = -MAXDOUBLE;
-    }
+    Vector3f maxVec;
+    for (int j = 0; j < 3; ++j)
+        maxVec[j] = MAXDOUBLE;
+    AABB aabb = AABB(maxVec, -maxVec, material);
+    
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
             aabb.minp[j] = std::min(aabb.minp[j], v[t[id][i]][j]);
@@ -161,9 +177,12 @@ void Mesh::updateNode(int s) {
     }
 }
 
+std::vector<Vector3f>* Mesh::cmpM = NULL;
+int Mesh::cmpDim = 0;
+
 // 对面片的比较
 bool Mesh::cmp (int a, int b) {
-    return m[a][cmpDim] < m[b][cmpDim];
+    return (*Mesh::cmpM)[a][Mesh::cmpDim] < (*Mesh::cmpM)[b][Mesh::cmpDim];
 }
 
 int Mesh::buildTree(int ll, int rr, int dim) {
@@ -178,9 +197,11 @@ int Mesh::buildTree(int ll, int rr, int dim) {
     int mid = (ll+rr) / 2;
     // TODO: nth_element ... calc aabb ...
     cmpDim = dim;
+    cmpM = &m;
     nth_element(seq.begin()+ll, seq.begin()+mid, seq.begin()+rr+1, cmp);
     node[s].leaf = seq[mid];
     node[s].child[0] = buildTree(ll, mid-1, (dim+1)%3);
     node[s].child[1] = buildTree(mid+1, rr, (dim+1)%3);
     updateNode(s);
+    return s;
 }

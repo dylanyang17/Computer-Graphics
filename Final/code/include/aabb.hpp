@@ -12,7 +12,13 @@
 
 class AABB : public Object3D {
 public:
-    AABB() {
+    // AABB() = delete;
+
+    AABB() : Object3D(NULL) {
+        ;
+    }
+
+    AABB(Material *material) : Object3D(material) {
         ;
     }
 
@@ -47,13 +53,13 @@ public:
                 maxT = min(maxT, tmp2);
             }
         }
-        if (sgn(maxT - minT) <= 0) return false;
+        if (sgn(maxT - minT) <= 0 || minT > h.getT()) return false;
         h.set(minT, material, norm);
         return true;
     }
 
     AABB operator| (const AABB &b) const {
-        AABB ret;
+        AABB ret = AABB(material);
         for (int i = 0; i < 3; ++i) {
             ret.minp[i] = std::min(b.minp[i], this->minp[i]);
             ret.maxp[i] = std::max(b.maxp[i], this->maxp[i]);

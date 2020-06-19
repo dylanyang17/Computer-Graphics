@@ -32,16 +32,20 @@ public:
     std::vector<Triangle> triangles;  // 面片集合
     bool intersect(const Ray &r, Hit &h, double tmin) override;
 
+    static std::vector<Vector3f> *cmpM;
+    static int cmpDim;
+    static bool cmp (int a, int b);
+
 private:
 
     // Normal can be used for light estimation
     void computeNormal();
 
     bool intersectKD(int s, const Ray &r, Hit &h, double tmin);
+    bool intersectBF(const Ray &r, Hit &h, double tmin);
     int buildTree(int ll, int rr, int dim);
     void updateNode(int s);
-    bool cmp (int a, int b);
-    int cmpDim;
+    int root;
 
     AABB getAABB(int id);
 };
