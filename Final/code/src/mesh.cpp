@@ -12,6 +12,7 @@ const int MAXNODE = 5000005;
 // KD-Tree 结点
 struct Node {
     int child[2];
+    int leaf;  // 等于分配给该结点的面片序号
     AABB aabb;
 
     Node() {
@@ -21,17 +22,19 @@ struct Node {
 
 int ndnum = 0;
 
+bool Mesh::intersectKD(int s, const Ray &r, Hit &h, double tmin) {
+    if (node[s].aabb.intersect(r, h, tmin) == false)
+        return false;
+    triangles[node[s].leaf]
+}
+
 bool Mesh::intersect(const Ray &r, Hit &h, double tmin) {
 
     // Optional: Change this brute force method into a faster one.
     // 遍历所有存储的三角形依次求交
     bool result = false;
     for (int triId = 0; triId < (int) t.size(); ++triId) {
-        TriangleIndex& triIndex = t[triId];
-        Triangle triangle(v[triIndex[0]],
-                          v[triIndex[1]], v[triIndex[2]], material);
-        triangle.normal = n[triId];
-        result |= triangle.intersect(r, h, tmin);
+        result |= triangles[triId].intersect(r, h, tmin);
     }
     return result;
 }
@@ -94,9 +97,27 @@ Mesh::Mesh(const char *filename, Material *material) : Object3D(material) {
             ss >> texcoord[1];
         }
     }
+
+    // 计算法向
     computeNormal();
+
+    // 存储 Triangle
+    for (int triId = 0; triId < (int) t.size(); ++triId) {
+        TriangleIndex& triIndex = t[triId];
+        Triangle triangle(v[triIndex[0]],
+                          v[triIndex[1]], v[triIndex[2]], material);
+        triangle.normal = n[triId];
+        triangles.push_back(triangle);
+    }
+
+    // 初始化 seq 并计算面片中点
     for (int i = 0; i < t.size(); ++i) {
         seq.push_back(i);
+        Vector3f mm = Vector3f::ZERO;
+        for (int j = 0; j < 3; ++j) {
+            mm = mm + v[t[i][j]]/3;
+        }
+        m.push_back(mm);
     }
     buildTree(0, t.size()-1, 0);
 
@@ -115,6 +136,7 @@ void Mesh::computeNormal() {
 }
 
 AABB Mesh::getAABB(int id) {
+    // id 为面片序号
     AABB aabb;
     for (int j = 0; j < 3; ++j) {
         aabb.minp[j] = MAXDOUBLE;
@@ -129,16 +151,36 @@ AABB Mesh::getAABB(int id) {
     return aabb;
 }
 
+void Mesh::updateNode(int s) {
+    node[s].aabb = getAABB(node[s].leaf);
+    for (int i = 0; i < 2; ++i) {
+        int c = node[s].child[i];
+        if (c) {
+            node[s].aabb = node[s].aabb | node[c].aabb;
+        }
+    }
+}
+
+// 对面片的比较
+bool Mesh::cmp (int a, int b) {
+    return m[a][cmpDim] < m[b][cmpDim];
+}
+
 int Mesh::buildTree(int ll, int rr, int dim) {
     if (ll > rr)
         return 0;
     int s = ++ndnum;
     if (ll == rr) {
         node[s].aabb = getAABB(seq[ll]);
+        node[s].leaf = seq[ll];
         return s;
     }
     int mid = (ll+rr) / 2;
     // TODO: nth_element ... calc aabb ...
+    cmpDim = dim;
+    nth_element(seq.begin()+ll, seq.begin()+mid, seq.begin()+rr+1, cmp);
+    node[s].leaf = seq[mid];
     node[s].child[0] = buildTree(ll, mid-1, (dim+1)%3);
     node[s].child[1] = buildTree(mid+1, rr, (dim+1)%3);
+    updateNode(s);
 }
