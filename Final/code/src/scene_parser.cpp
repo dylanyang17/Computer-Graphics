@@ -275,14 +275,17 @@ Material *SceneParser::parseMaterial() {
     char token[MAX_PARSER_TOKEN_LENGTH];
     char filename[MAX_PARSER_TOKEN_LENGTH];
     filename[0] = 0;
-    double refRatio = 0;
+    double diffuseRatio = 0;
+    bool isGlass = false;
     Vector3f emission(0, 0, 0), color(0, 0, 0);
     getToken(token);
     assert (!strcmp(token, "{"));
     while (true) {
         getToken(token);
-        if (strcmp(token, "refRatio") == 0) {
-            refRatio = readDouble();
+        if (strcmp(token, "diffuseRatio") == 0) {
+            diffuseRatio = readDouble();
+        } else if (strcmp(token, "isGlass") == 0) {
+            isGlass = true;
         } else if (strcmp(token, "emission") == 0) {
             emission = readVector3f();
         } else if (strcmp(token, "color") == 0) {
@@ -296,7 +299,7 @@ Material *SceneParser::parseMaterial() {
             break;
         }
     }
-    auto *answer = new Material(refRatio, emission, color);
+    auto *answer = new Material(diffuseRatio, isGlass, emission, color);
     return answer;
 }
 

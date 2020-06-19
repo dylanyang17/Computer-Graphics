@@ -84,6 +84,12 @@ vecmath.h
 ray.hpp
 ../include/ray.hpp
 
+../include/image.hpp
+cassert
+-
+vecmath.h
+-
+
 ../include/light.hpp
 Vector3f.h
 -
@@ -185,6 +191,34 @@ vecmath.h
 -
 ray.hpp
 ../include/ray.hpp
+
+/home/yyr/Work/Computer-Graphics/Final/code/src/main.cpp
+cassert
+-
+cstdio
+-
+cstdlib
+-
+cstring
+-
+cmath
+-
+iostream
+-
+scene_parser.hpp
+/home/yyr/Work/Computer-Graphics/Final/code/src/scene_parser.hpp
+image.hpp
+/home/yyr/Work/Computer-Graphics/Final/code/src/image.hpp
+camera.hpp
+/home/yyr/Work/Computer-Graphics/Final/code/src/camera.hpp
+group.hpp
+/home/yyr/Work/Computer-Graphics/Final/code/src/group.hpp
+light.hpp
+/home/yyr/Work/Computer-Graphics/Final/code/src/light.hpp
+string
+-
+cmath
+-
 
 /home/yyr/Work/Computer-Graphics/Final/code/src/mesh.cpp
 mesh.hpp

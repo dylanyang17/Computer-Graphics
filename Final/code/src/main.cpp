@@ -52,22 +52,14 @@ Vector3f radiance(int ttx, int tty, int tts, const Ray &r, int depth, unsigned s
     Vector3f ret = m->emission;
     Vector3f hitPoint = r.pointAtParameter(hit.getT());
     Vector3f norm = hit.getNormal();
-    double refRatio = m->refRatio;
+    double diffuseRatio = m -> diffuseRatio;
     double p = f.x()>f.y() && f.x()>f.z() ? f.x() : f.y()>f.z() ? f.y() : f.z();
     if (f.length() < 1e-8) return ret;  // 剪枝
     if (depth > 5) if (erand48(Xi) < min((double)p, 0.9)) f = f/p; else return ret;  // 轮盘赌
-    int only = 0;  // 为 0 时表示两个部分都需要计算，为 1 时表示仅计算镜面反射部分，为 2 时表示仅计算漫反射部分
-    if (depth > 2) only = (erand48(Xi) < refRatio) ? 1 : 2;
+    int only = 0;  // 为 1 时表示仅计算漫反射部分，为 2 时表示仅计算折/反射部分，为 0 表示均计算
+    if (depth > 2) only = (erand48(Xi) < diffuseRatio) ? 1 : 2;
     Vector3f sum = Vector3f::ZERO;  // 存储从该交点出发之后的颜色效果总和
-    if ((only == 0 || only == 1) && refRatio > 1e-5) {
-        // 镜面反射部分
-        Vector3f in = r.getDirection().normalized();
-        Vector3f newDir = (in - Vector3f::dot(in, norm)*2*norm).normalized();
-        Vector3f tmp = radiance(ttx, tty, tts, Ray(hitPoint, newDir), depth+1, Xi, group, background);
-        if (only == 0) tmp = tmp * refRatio;
-        sum = sum + tmp;
-    }
-    if ((only == 0 || only == 2) && refRatio < 1-1e-5) {
+    if ((only == 0 || only == 1) && diffuseRatio > 1e-5) {
         // 漫反射部分
         // u, v, w 为一组正交基，其中 w 即交点处法向 norm
         // r2s 即单位反射向量在 uv 平面上的投影长度
@@ -76,8 +68,18 @@ Vector3f radiance(int ttx, int tty, int tts, const Ray &r, int depth, unsigned s
             v = Vector3f::cross(w, u);
         Vector3f newDir = (u*cos(r1)*r2s + v*sin(r1)*r2s + w*sqrt(1-r2)).normalized();
         Vector3f tmp = radiance(ttx, tty, tts, Ray(hitPoint, newDir), depth+1, Xi, group, background);
-        if (only == 0) tmp = tmp * (1-refRatio);
+        if (only == 0) tmp = tmp * diffuseRatio;
         sum = sum + tmp;
+    }    
+    if ((only == 0 || only == 2) && 1-diffuseRatio > 1e-5) {
+        // 镜面反射部分
+        Vector3f in = r.getDirection().normalized();
+        Vector3f newDir = (in - Vector3f::dot(in, norm)*2*norm).normalized();
+        Vector3f tmp = radiance(ttx, tty, tts, Ray(hitPoint, newDir), depth+1, Xi, group, background);
+        if (!m->isGlass) {
+          if (only == 0) tmp = tmp * (1-diffuseRatio);
+          sum = sum + tmp;
+        }
     }
     ret = ret + f * sum;
     return ret;

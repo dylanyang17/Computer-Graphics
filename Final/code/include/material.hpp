@@ -13,14 +13,15 @@
 class Material {
 public:
 
-    explicit Material(const double refRatio, Vector3f emission, Vector3f color) :
-            refRatio(refRatio), emission(emission), color(color) {
+    explicit Material(const double diffuseRatio, bool isGlass, Vector3f emission, Vector3f color) :
+            diffuseRatio(diffuseRatio), isGlass(isGlass), emission(emission), color(color) {
         ;
     }
 
     virtual ~Material() = default;
 
-    double refRatio;
+    double diffuseRatio;
+    bool isGlass;
     Vector3f emission, color;
 };
 
