@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     string inputFile = argv[1];
     string outputFile = argv[2];  // only bmp is allowed.
 
-    // TODO: Main RayCasting Logic
+    // Main RayCasting Logic
     // First, parse the scene using SceneParser.
     // Then loop over each pixel in the image, shooting a ray
     // through that pixel and finding its intersection with
